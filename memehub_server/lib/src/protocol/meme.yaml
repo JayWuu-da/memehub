@@ -1,0 +1,43 @@
+### MemeHub Protocol - Meme Model
+
+class: Meme
+table: memes
+fields:
+  ### User who uploaded this meme
+  userId: int
+  
+  ### Storage paths
+  storageUrl: String
+  thumbnailUrl: String?
+  
+  ### File metadata
+  fileType: String
+  fileSize: int
+  width: int
+  height: int
+  
+  ### AI-generated content
+  ocrText: String?
+  aiDescription: String?
+  tags: List<String>?
+  
+  ### Content moderation
+  isNsfw: bool
+  status: String
+  
+  ### Usage tracking
+  usageCount: int
+  
+  ### Timestamps
+  createdAt: DateTime
+  updatedAt: DateTime
+
+indexes:
+  meme_user_idx:
+    fields: userId
+  meme_status_idx:
+    fields: status
+  meme_usage_idx:
+    fields: usageCount
+  meme_created_idx:
+    fields: createdAt

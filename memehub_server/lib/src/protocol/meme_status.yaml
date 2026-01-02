@@ -1,0 +1,8 @@
+### MemeHub Protocol - Meme Status Enum
+
+enum: MemeStatus
+values:
+  - pending
+  - processing
+  - approved
+  - rejected

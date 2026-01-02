@@ -1,0 +1,34 @@
+emailIdp:
+  - login:
+  - startRegistration:
+  - verifyRegistrationCode:
+  - finishRegistration:
+  - startPasswordReset:
+  - verifyPasswordResetCode:
+  - finishPasswordReset:
+jwtRefresh:
+  - refreshAccessToken:
+collection:
+  - create:
+  - getMyCollections:
+  - getCollection:
+  - update:
+  - delete:
+  - addMeme:
+  - removeMeme:
+  - getMemes:
+meme:
+  - createUploadUrl:
+  - completeUpload:
+  - search:
+  - getTrending:
+  - getLatest:
+  - recordUsage:
+  - getMeme:
+  - getMyMemes:
+  - deleteMeme:
+trending:
+  - streamTrending:
+  - getTrendingSnapshot:
+greeting:
+  - hello:

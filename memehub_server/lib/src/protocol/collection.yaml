@@ -1,0 +1,21 @@
+### MemeHub Protocol - Collection Model
+
+class: Collection
+table: collections
+fields:
+  ### Owner
+  userId: int
+  
+  ### Collection info
+  name: String
+  description: String?
+  coverMemeId: int?
+  memeCount: int
+  
+  ### Timestamps
+  createdAt: DateTime
+  updatedAt: DateTime
+
+indexes:
+  collection_user_idx:
+    fields: userId

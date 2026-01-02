@@ -1,0 +1,14 @@
+### MemeHub Protocol - Collection Meme Junction
+
+class: CollectionMeme
+table: collection_memes
+fields:
+  collectionId: int
+  memeId: int
+  addedAt: DateTime
+
+indexes:
+  cm_collection_idx:
+    fields: collectionId
+  cm_meme_idx:
+    fields: memeId

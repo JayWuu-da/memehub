@@ -1,0 +1,15 @@
+### MemeHub Protocol - Meme Usage Tracking
+
+class: MemeUsage
+table: meme_usages
+fields:
+  memeId: int
+  userId: int?
+  usedAt: DateTime
+  source: String  # 'keyboard' | 'app' | 'share'
+
+indexes:
+  usage_meme_idx:
+    fields: memeId
+  usage_time_idx:
+    fields: usedAt

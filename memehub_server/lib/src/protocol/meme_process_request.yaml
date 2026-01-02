@@ -1,0 +1,6 @@
+### Meme Process Request DTO for Future Call
+
+class: MemeProcessRequest
+fields:
+  memeId: int
+  storagePath: String

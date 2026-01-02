@@ -1,0 +1,10 @@
+### Trending Update DTO for Real-time Streaming
+
+class: TrendingUpdate
+fields:
+  memeId: int
+  storageUrl: String
+  thumbnailUrl: String?
+  usageCount: int
+  rank: int
+  changeType: String  # 'new' | 'up' | 'down' | 'same'

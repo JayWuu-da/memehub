@@ -1,0 +1,9 @@
+### AI Analysis Result DTO
+
+class: AiAnalysisResult
+fields:
+  isNsfw: bool
+  nsfwConfidence: double
+  ocrText: String?
+  description: String?
+  tags: List<String>?

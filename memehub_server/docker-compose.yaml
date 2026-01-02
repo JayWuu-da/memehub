@@ -1,0 +1,44 @@
+services:
+  # Development services
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "8090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: memehub
+      POSTGRES_PASSWORD: "KsW-yWOWsAVprS2O19QMVi0nmCeInKL1"
+    volumes:
+      - memehub_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6.2.6
+    ports:
+      - "8091:6379"
+    command: redis-server --requirepass "W5MmpV_osP0HRnKNyCUkrC8-SUQS8xjV"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+  # Test services
+  postgres_test:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "9090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: memehub_test
+      POSTGRES_PASSWORD: "ICh0yydm54alftkdQYbqvOOrgYwTqg3b"
+    volumes:
+      - memehub_test_data:/var/lib/postgresql/data
+
+  redis_test:
+    image: redis:6.2.6
+    ports:
+      - "9091:6379"
+    command: redis-server --requirepass "lhkCYccpM2w3WvPnamZ-7p4VVO2GjOGt"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+volumes:
+  memehub_data:
+  memehub_test_data:

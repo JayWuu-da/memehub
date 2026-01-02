@@ -1,0 +1,7 @@
+### Upload Description DTO
+
+class: UploadDescription
+fields:
+  uploadUrl: String
+  storagePath: String
+  expiresAt: DateTime
