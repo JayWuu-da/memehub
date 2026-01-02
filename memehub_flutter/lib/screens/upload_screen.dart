@@ -1,10 +1,11 @@
-import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:memehub_client/memehub_client.dart';
 import '../main.dart';
 
-/// 업로드 화면
+/// 업로드 화면 - 웹/모바일 크로스 플랫폼 지원
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
 
@@ -13,7 +14,8 @@ class UploadScreen extends StatefulWidget {
 }
 
 class _UploadScreenState extends State<UploadScreen> {
-  File? _selectedImage;
+  XFile? _selectedFile;
+  Uint8List? _imageBytes; // 웹용 이미지 바이트
   bool _isUploading = false;
   int _currentStep = 0;
   String? _statusMessage;
@@ -30,8 +32,12 @@ class _UploadScreenState extends State<UploadScreen> {
       );
 
       if (pickedFile != null) {
+        // 웹/모바일 모두 지원하기 위해 바이트로 읽기
+        final bytes = await pickedFile.readAsBytes();
+        
         setState(() {
-          _selectedImage = File(pickedFile.path);
+          _selectedFile = pickedFile;
+          _imageBytes = bytes;
           _currentStep = 1;
           _statusMessage = null;
         });
@@ -42,7 +48,7 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 
   Future<void> _uploadMeme() async {
-    if (_selectedImage == null) return;
+    if (_selectedFile == null) return;
 
     setState(() {
       _isUploading = true;
@@ -51,8 +57,8 @@ class _UploadScreenState extends State<UploadScreen> {
     });
 
     try {
-      final fileName = _selectedImage!.path.split('/').last;
-      final fileSize = await _selectedImage!.length();
+      final fileName = _selectedFile!.name;
+      final fileSize = _imageBytes?.length ?? 0;
       final fileType = fileName.split('.').last.toLowerCase();
 
       setState(() => _statusMessage = 'Getting upload URL...');
@@ -65,7 +71,7 @@ class _UploadScreenState extends State<UploadScreen> {
 
       setState(() => _statusMessage = 'Uploading image...');
 
-      // TODO: Actual upload to GCS here
+      // TODO: Actual upload to GCS here using _imageBytes
 
       setState(() {
         _statusMessage = 'Starting AI analysis...';
@@ -184,7 +190,8 @@ class _UploadScreenState extends State<UploadScreen> {
 
   void _resetUpload() {
     setState(() {
-      _selectedImage = null;
+      _selectedFile = null;
+      _imageBytes = null;
       _currentStep = 0;
       _statusMessage = null;
     });
@@ -236,13 +243,13 @@ class _UploadScreenState extends State<UploadScreen> {
 
             // Content
             Expanded(
-              child: _selectedImage != null
+              child: _imageBytes != null
                   ? _buildImagePreview()
                   : _buildImagePicker(),
             ),
 
             // Upload button
-            if (_selectedImage != null && !_isUploading)
+            if (_imageBytes != null && !_isUploading)
               Container(
                 color: AppColors.white,
                 padding: const EdgeInsets.all(20),
@@ -350,7 +357,7 @@ class _UploadScreenState extends State<UploadScreen> {
           children: [
             Container(
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.blueLight,
                 shape: BoxShape.circle,
               ),
@@ -386,12 +393,15 @@ class _UploadScreenState extends State<UploadScreen> {
                   icon: const Icon(Icons.photo_library_outlined),
                   label: const Text('Gallery'),
                 ),
-                const SizedBox(width: 12),
-                OutlinedButton.icon(
-                  onPressed: () => _pickImage(ImageSource.camera),
-                  icon: const Icon(Icons.camera_alt_outlined),
-                  label: const Text('Camera'),
-                ),
+                // 카메라는 모바일에서만 표시
+                if (!kIsWeb) ...[
+                  const SizedBox(width: 12),
+                  OutlinedButton.icon(
+                    onPressed: () => _pickImage(ImageSource.camera),
+                    icon: const Icon(Icons.camera_alt_outlined),
+                    label: const Text('Camera'),
+                  ),
+                ],
               ],
             ),
           ],
@@ -423,8 +433,9 @@ class _UploadScreenState extends State<UploadScreen> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: Image.file(
-                      _selectedImage!,
+                    // 크로스 플랫폼: Image.memory 사용
+                    child: Image.memory(
+                      _imageBytes!,
                       fit: BoxFit.contain,
                     ),
                   ),
